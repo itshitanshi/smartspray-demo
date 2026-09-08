@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartSpray — Precision Spraying Demo</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      SMARTSPRAY <span class="brand-sub">DEMO</span>
+    </div>
+    <div class="topbar-steps">
+      <span class="step active" data-step="1">1 · Draw Field</span>
+      <span class="step" data-step="2">2 · Upload Image</span>
+      <span class="step" data-step="3">3 · Analyze</span>
+      <span class="step" data-step="4">4 · Simulate Flight</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- LEFT: Map -->
+    <section class="panel map-panel">
+      <div class="panel-head">
+        <h2>Field Boundary</h2>
+        <p class="muted">Draw a polygon over the field, then run the simulation.</p>
+      </div>
+      <div id="map"></div>
+      <div class="map-actions">
+        <button id="clearBoundaryBtn" class="btn btn-ghost">Clear boundary</button>
+        <button id="runFlightBtn" class="btn btn-primary" disabled>▶ Simulate Flight</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: Upload + Analysis + Dashboard -->
+    <section class="panel side-panel">
+      <div class="panel-head">
+        <h2>Crop Image Analysis</h2>
+        <p class="muted">Upload a field/crop photo to run the detection model.</p>
+      </div>
+
+      <div id="dropzone" class="dropzone">
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <p><strong>Click to upload</strong> or drag an image here</p>
+        <p class="muted small">JPG / PNG — sample crop or field photos work well</p>
+      </div>
+
+      <div id="analyzeResult" class="analyze-result hidden">
+        <img id="overlayImg" alt="AI detection overlay" />
+        <div class="legend">
+          <span><i class="dot healthy"></i> Healthy</span>
+          <span><i class="dot diseased"></i> Diseased</span>
+          <span><i class="dot weed"></i> Weed</span>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric-card">
+          <span class="metric-label">AREA COVERED</span>
+          <span class="metric-value" id="mArea">-- ha</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">SPRAY USED</span>
+          <span class="metric-value" id="mSpray">-- mL</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">TARGET AREA</span>
+          <span class="metric-value" id="mTarget">-- %</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">FIELD STATUS</span>
+          <span class="metric-value" id="mStatus">--</span>
+        </div>
+      </div>
+
+      <div class="history">
+        <h3>Spraying History <span class="muted small">(this session)</span></h3>
+        <table id="historyTable">
+          <thead>
+            <tr><th>Field</th><th>Area</th><th>Target %</th><th>Spray Used</th><th>Time</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p id="historyEmpty" class="muted small">No runs yet — draw a field and analyze an image to get started.</p>
+      </div>
+    </section>
+  </main>
+
+  <p class="disclaimer">
+    Prototype / hackathon demo. Detection uses a color-heuristic baseline (Excess Green Index + HSV), a stand-in for the
+    trained YOLOv8/MobileNet model described in the project plan. Flight path is simulated, not flown.
+  </p>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
